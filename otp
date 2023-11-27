@@ -1,17 +1,23 @@
 import React from 'react';
 import { View, Button } from 'react-native';
-import SendIntentAndroid from 'react-native-send-intent';
+import SendSMS from 'react-native-sms';
 
 const App = () => {
   const sendSMS = () => {
     const phoneNumber = '123456789'; // Replace with the recipient's phone number
     const message = 'Hello, this is a test SMS!'; // Replace with your message
 
-    SendIntentAndroid.sendSms({
-      phoneNumber,
-      text: message,
-      requestCode: 123, // Optional requestCode
-    });
+    SendSMS.send(
+      {
+        body: message,
+        recipients: [phoneNumber],
+        successTypes: ['sent', 'queued'],
+        allowAndroidSendWithoutReadPermission: true, // Set to true if you want to send without READ_SMS permission
+      },
+      (completed, cancelled, error) => {
+        console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+      }
+    );
   };
 
   return (
